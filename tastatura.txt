@@ -1,2 +1,70 @@
-5
-11 22 33 44 55
+1
+Razboi si pace
+Lev Tolstoi
+33
+3
+230
+pdf
+
+1
+Ion
+Liviu Rebreanu
+22
+12
+300
+epub
+
+1
+Mandrie si prejudecata
+Jane Austen
+18
+10
+360
+epub
+
+2
+Abbey Road
+The Beatles
+28
+4
+17
+rock
+Abbey Road
+
+2
+The Dark Side of The Moon
+Pink Floyd
+100
+9
+10
+rock
+The Dark Side of The Moon
+
+3
+Ana
+Tanase
+0755645333
+tanaseana@yahoo.com
+
+3
+Irina
+Mihai
+0766453554
+irina99@gmail.com
+
+//Sortare carti dupa pret
+7
+4
+
+///Adaugare produs client
+8
+1
+1
+2
+
+8
+1
+2
+1
+9
+
