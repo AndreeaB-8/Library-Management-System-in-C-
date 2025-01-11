@@ -567,7 +567,7 @@ void Meniu::run() {
                     case 9: cautareProdusTitlu(); break;
                     case 10: afisareInventarClient(); break;
                     case 0:
-                        cout << "Iesire \n";
+                        cout << "Iesire. \n";
                         return;
                     default: throw wrongInput();
                 }
