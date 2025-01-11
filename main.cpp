@@ -239,7 +239,7 @@ public: ///!!!const string &
     }
     virtual ~Client() {}
 
-    int getIndex() const{return index;}
+    //int getIndex() const{return index;}
     int getSumaClient() const{return suma_produse;}
     //const string &getNume() const{return nume;}
     //const string &getPrenume() const{return prenume;}
@@ -448,7 +448,7 @@ void Meniu::afisareClienti() {
     }
     cout << "Clienti inregistrati:\n";
     for(auto i = clienti.begin(); i != clienti.end(); i++) {
-        const auto& client = *i;
+        const auto* client = *i;    ///*, nu &!!!
         client -> afisare();
         cout << '\n';
     }
