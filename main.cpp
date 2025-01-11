@@ -201,8 +201,8 @@ private:
     string email;
     double suma_produse;
 
-public:
-    Client(string nume, string prenume, string nr_telefon, string email) : nume(nume), prenume(prenume), nr_telefon(nr_telefon), email(email), suma_produse(0) {
+public: ///!!!const string &
+    Client(const string &nume, const string &prenume, const string &nr_telefon, const string &email) : nume(nume), prenume(prenume), nr_telefon(nr_telefon), email(email), suma_produse(0) {
         index = contor++;
     }
 
@@ -241,9 +241,9 @@ public:
 
     int getIndex() const{return index;}
     int getSumaClient() const{return suma_produse;}
-    const string &getNume() const{return nume;}
-    const string &getPrenume() const{return prenume;}
-    const string &getTelefon() const {return nr_telefon;}
+    //const string &getNume() const{return nume;}
+    //const string &getPrenume() const{return prenume;}
+    //const string &getTelefon() const {return nr_telefon;}
 };
 int Client::contor = 1;
 
@@ -349,10 +349,10 @@ void Meniu::cautareProdusTitlu() {
     cin.ignore();
     getline(cin, titlu);
 
-    bool gasit = 0;
+    bool gasit = false;
     for(Produs* produs : produse) {
         if(produs->getTitlu() == titlu) {
-            gasit = 1;
+            gasit = true;
             if(dynamic_cast<Carte *>(produs)) { ///pt ca primeam eroare la G actions
                 cout << "Carte gasita!\n";
             }
@@ -406,18 +406,20 @@ void Meniu::adaugareClient() {
     cin.ignore();
     getline(cin, email);
 
-    Client *client = new Client(nume, prenume, nr_telefon, email);
+    Client *client = new Client(nume, prenume, nr_telefon, email);    ///memory leak
+    //unique_ptr<Client> client = make_unique<Client>(nume, prenume, nr_telefon, email);
+    //clienti.push_back(client.get());
     clienti.push_back(client);
     cout << "Clientul a fost inregistrat cu succes!\n";
 }
 
 void Meniu::afisareCarti() {
-    bool ok = 0;
+    bool ok = false;
     cout << "Carti inregistrate: \n";
     for(const Produs* produs: produse) {
         if(const Carte* carte = dynamic_cast<const Carte*>(produs)) {
             cout << *carte;
-            ok = 1;
+            ok = true;
         }
     }
     if(!ok) {
@@ -426,12 +428,12 @@ void Meniu::afisareCarti() {
 }
 
 void Meniu::afisareCDuri() {
-    bool ok = 0;
+    bool ok = false;
     cout << "CD-uri inregistrate: \n";
     for(const Produs* produs: produse) {    ///!!const
         if(const CD* cd = dynamic_cast<const CD*>(produs)) {    ///!!!
             cout << *cd;
-            ok = 1;
+            ok = true;
         }
     }
     if(!ok) {
@@ -479,13 +481,18 @@ void Meniu::adaugareProdusClient() {
 
     int index_produs;
     cin >> index_produs;
-    Produs* produs = produse[index_produs - 1];
-    if(produs -> getStoc() > 0) {
-        produs -> scadeStoc();
-        *c += produs;    ///adaugam produsul clientului
-        cout << "Clientul a cumparat produsul! Achizitie reusita!";
+    if(index_produs > 0 && index_produs <= produse.size()) {
+        Produs* produs = produse[index_produs - 1];
+        if(produs -> getStoc() > 0) {
+            produs -> scadeStoc();
+            *c += produs;    ///adaugam produsul clientului
+            cout << "Clientul a cumparat produsul! Achizitie reusita!\n";
+        }
+        cout << "Suma cheltuita de clientul " << index << " este: " << c -> getSumaClient() << '\n';
     }
-    cout << "Suma cheltuita de clientul " << index << " este: " << c -> getSumaClient() << '\n';
+    else {
+        cout << "Indexul selectat este incorect!\n";
+    }
 }
 
 class wrongInput:public exception {
