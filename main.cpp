@@ -54,8 +54,8 @@ public:
 
 class Carte: public Produs {    ///de tip BUILDER
 private:
-    int nr_pagini;
-    string format;
+    int nr_pagini = 0;  ///le-am initializat asa ca sa nu mi mai dea eroare
+    string format = ""; ///dar si pt a lasa constr de la builder asa
 friend class CarteBuilder;
 public:
     Carte() = default;  ///pt builder
@@ -85,7 +85,8 @@ public:
     }
 
     friend istream& operator>>(istream &in, Carte& c) {
-        in >> (Produs&) c;  ///citirea atributelor comune din Produs
+        //in >> (Produs&) c;  ///citirea atributelor comune din Produs
+        in >> dynamic_cast<Produs&>(c);
         cout << "Nr Pagini: ";
         in >> c.nr_pagini;
         cout << "Format: ";
@@ -172,7 +173,8 @@ public:
     }
 
     friend istream& operator>>(istream &in, CD& c) {
-        in >> (Produs&) c;
+        //in >> (Produs&) c;
+        in >> dynamic_cast<Produs&>(c);
         cout << "Numar melodii : ";
         in >> c.nr_melodii;
         cout << "Gen : ";
@@ -329,9 +331,9 @@ void Meniu::adaugareCarte() {
 }
 
 void Meniu::sortare_carti_pret() {
-    vector <Carte*> carti;
+    vector <const Carte*> carti;    ///!!!
     for(Produs* produs : produse) {
-        if(Carte* c = dynamic_cast <Carte*> (produs)) {
+        if(const Carte* c = dynamic_cast <const Carte*> (produs)) { ///!!!
             carti.push_back(c);
         }
     }
@@ -427,7 +429,7 @@ void Meniu::afisareCDuri() {
     bool ok = 0;
     cout << "CD-uri inregistrate: \n";
     for(Produs* produs: produse) {
-        if(CD* cd = dynamic_cast<CD*>(produs)) {
+        if(const CD* cd = dynamic_cast<const CD*>(produs)) {    ///!!!
             cout << *cd;
             ok = 1;
         }
