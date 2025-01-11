@@ -428,7 +428,7 @@ void Meniu::afisareCarti() {
 void Meniu::afisareCDuri() {
     bool ok = 0;
     cout << "CD-uri inregistrate: \n";
-    for(const Produs* produs: produse) {    ///!!!const
+    for(const Produs* produs: produse) {    ///!!const
         if(const CD* cd = dynamic_cast<const CD*>(produs)) {    ///!!!
             cout << *cd;
             ok = 1;
