@@ -205,13 +205,13 @@ public:
             return;
         }
         cout << "Produse achizitionate: \n";
-        for(const auto& produs: produse) {
+        for(const Produs* produs: produse) {
             cout << *produs << '\n';
         }
     }
     double Suma() const {
         double suma = 0;
-        for(const auto& produs: produse) {
+        for(const Produs* produs: produse) {
             suma += produs -> PretFinal();
         }
         return suma;
@@ -509,32 +509,34 @@ void Meniu::adaugareProdusClient() {
 
     int index;
     cin >> index;
-    Client* c = clienti[index - 1];
+    if(index > 0 && index <= clienti.size()) {
+        Client* c = clienti[index - 1];
 
-    if(produse.empty()) {
-        cout << "Nu exista produse in stoc! \n";
-        return;
-    }
-
-    cout << "Selecteaza indexul produsului dorit: \n";
-    for(size_t i = 0; i < produse.size(); i++) {
-        cout << i + 1 <<". " << *produse[i] << '\n';
-    }
-
-    size_t index_produs;    ///poate fi citita si o valoare negativa
-    cin >> index_produs;
-    if(index_produs > 0 && index_produs <= produse.size()) {
-        Produs* produs = produse[index_produs - 1];
-        if(produs -> getStoc() > 0) {
-            produs -> scadeStoc();
-            *c += produs;    ///adaugam produsul clientului
-
-            cout << "Clientul a cumparat produsul! Achizitie reusita!\n";
+        if(produse.empty()) {
+            cout << "Nu exista produse in stoc! \n";
+            return;
         }
-        cout << "Suma cheltuita de clientul " << index << " este: " << c -> getSumaClient() << '\n';
-    }
-    else {
-        cout << "Indexul selectat este incorect!\n";
+
+        cout << "Selecteaza indexul produsului dorit: \n";
+        for(size_t i = 0; i < produse.size(); i++) {
+            cout << i + 1 <<". " << *produse[i] << '\n';
+        }
+
+        size_t index_produs;    ///poate fi citita si o valoare negativa
+        cin >> index_produs;
+        if(index_produs > 0 && index_produs <= produse.size()) {
+            Produs* produs = produse[index_produs - 1];
+            if(produs -> getStoc() > 0) {
+                produs -> scadeStoc();
+                *c += produs;    ///adaugam produsul clientului
+
+                cout << "Clientul a cumparat produsul! Achizitie reusita!\n";
+            }
+            cout << "Suma cheltuita de clientul " << index << " este: " << c -> getSumaClient() << '\n';
+        }
+        else {
+            cout << "Indexul selectat este incorect!\n";
+        }
     }
 }
 
@@ -548,7 +550,7 @@ void Meniu::afisareInventarClient() {
     }
     int index;
     cin >> index;
-    Client* c = clienti[index - 1];
+    const Client* c = clienti[index - 1];
 
     cout << "Inventar: \n";
     const vector <Produs*>& inventar = c->getInventarClient();
