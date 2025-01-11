@@ -537,7 +537,6 @@ void Meniu::adaugareProdusClient() {
             *c += produs;    ///adaugam produsul clientului
             cout << "Clientul a cumparat produsul! Achizitie reusita!\n";
         }
-        cout << "Suma cheltuita de clientul " << index << " este: " << c -> getSumaClient() << '\n';
     }
     else {
         cout << "Indexul selectat este incorect!\n";
