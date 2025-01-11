@@ -43,20 +43,3 @@ Irina
 Mihai
 0766453554
 irina99@gmail.com
-
-//Sortare carti dupa pret
-7
-4
-
-///Adaugare produs client
-8
-1
-1
-2
-
-8
-1
-2
-1
-9
-
