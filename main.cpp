@@ -139,10 +139,12 @@ class CarteBuilder {
 
 class CD: public Produs {
 private:
-    int nr_melodii;
     string gen, album;
+    int nr_melodii;
+
 public:
-    CD(string titlu, string autor, string album, double pret, int stoc, int nr_melodii, string gen):Produs(titlu, autor, pret, stoc), album(album), nr_melodii(nr_melodii), gen(gen) {}
+    CD(string titlu, string autor, string album, double pret, int stoc, int nr_melodii, string gen)
+        :Produs(titlu, autor, pret, stoc), gen(gen), album(album), nr_melodii(nr_melodii) {}
     CD(const CD &c):Produs(c), nr_melodii(c.nr_melodii), gen(c.gen), album(c.album) {}
 
     CD& operator=(const CD& c) {
@@ -331,10 +333,10 @@ void Meniu::cautareProdusTitlu() {
     for(Produs* produs : produse) {
         if(produs->getTitlu() == titlu) {
             gasit = 1;
-            if(Carte *carte = dynamic_cast<Carte *>(produs)) {
+            if(dynamic_cast<Carte *>(produs)) { ///pt ca primeam eroare la G actions
                 cout << "Carte gasita!\n";
             }
-            else if(CD *cd = dynamic_cast<CD *>(produs)) {
+            else if(dynamic_cast<CD *>(produs)) {
                 cout << "CD gasit!\n";
             }
         }
@@ -437,7 +439,7 @@ void Meniu::adaugareProdusClient() {
     }
 
     cout <<"Selecteaza indexul clientului:\n";
-    for(int i = 0; i < clienti.size(); i++) {
+    for(size_t i = 0; i < clienti.size(); i++) {    ///eroare la github actions
         cout << i + 1 <<". " << *clienti[i] << '\n';
     }
 
@@ -451,7 +453,7 @@ void Meniu::adaugareProdusClient() {
     }
 
     cout << "Selecteaza indexul produsului dorit: \n";
-    for(int i = 0; i < produse.size(); i++) {
+    for(size_t i = 0; i < produse.size(); i++) {
         cout << i + 1 <<". " << *produse[i] << '\n';
     }
 
