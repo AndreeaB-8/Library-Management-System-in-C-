@@ -332,7 +332,7 @@ void Meniu::adaugareCarte() {
 
 void Meniu::sortare_carti_pret() {
     vector <const Carte*> carti;    ///!!!
-    for(Produs* produs : produse) {
+    for(const Produs* produs : produse) {
         if(const Carte* c = dynamic_cast <const Carte*> (produs)) { ///!!!
             carti.push_back(c);
         }
@@ -414,7 +414,7 @@ void Meniu::adaugareClient() {
 void Meniu::afisareCarti() {
     bool ok = 0;
     cout << "Carti inregistrate: \n";
-    for(Produs* produs: produse) {
+    for(const Produs* produs: produse) {
         if(const Carte* carte = dynamic_cast<const Carte*>(produs)) {
             cout << *carte;
             ok = 1;
