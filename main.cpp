@@ -44,7 +44,7 @@ public:
     }
     virtual ~Produs() {}
 
-    const string getTitlu() const {return titlu;}
+    const string &getTitlu() const {return titlu;}  ///!!!
     int getStoc() const {return stoc;}
     void scadeStoc() {
         stoc--;
@@ -59,7 +59,7 @@ private:
 friend class CarteBuilder;
 public:
     Carte() = default;  ///pt builder
-    Carte(string titlu, string autor, double pret, int stoc, int nr_pagini, string format)
+    Carte(const string &titlu, const string &autor, double pret, int stoc, int nr_pagini, const string &format) ///referinta constanta pt parametrii de tip string
     : Produs(titlu, autor, pret, stoc), nr_pagini(nr_pagini) , format(format) {}
     Carte(const Carte &c):Produs(c), nr_pagini(c.nr_pagini), format(c.format) {}
 
@@ -96,7 +96,7 @@ public:
     double PretFinal()const override {
         return pret + (pret * (4/100));   ///Am presupus ca TVA-ul pt carti este 4%
     }
-    virtual ~Carte() {}
+    virtual ~Carte() override{}
 };
 ///operator < non-membru
 bool operator<(const Carte& c1, const Carte& c2) {
@@ -133,7 +133,7 @@ class CarteBuilder {
         carte.format = f;
         return *this;
     }
-    Carte build() {
+    Carte &build() {    ///!!!
         return carte;
     }
 };
@@ -144,7 +144,7 @@ private:
     int nr_melodii;
 
 public:
-    CD(string titlu, string autor, string album, double pret, int stoc, int nr_melodii, string gen)
+    CD(const string &titlu, const string &autor, const string &album, double pret, int stoc, int nr_melodii, const string &gen) ///!!!
         :Produs(titlu, autor, pret, stoc), gen(gen), album(album), nr_melodii(nr_melodii) {}
     CD(const CD &c):Produs(c), gen(c.gen), album(c.album),nr_melodii(c.nr_melodii) {}
 
@@ -185,7 +185,7 @@ public:
     double PretFinal() const override {
         return pret + (pret * (7/100));  ///TVA-ul pt CD-uri = 7%
     }
-    virtual ~CD() {}
+    virtual ~CD() override{}
 };
 
 ///
@@ -239,9 +239,9 @@ public:
 
     int getIndex() const{return index;}
     int getSumaClient() const{return suma_produse;}
-    const string getNume() const{return nume;}
-    const string getPrenume() const{return prenume;}
-    const string getTelefon() const {return nr_telefon;}
+    const string &getNume() const{return nume;}
+    const string &getPrenume() const{return prenume;}
+    const string &getTelefon() const {return nr_telefon;}
 };
 int Client::contor = 1;
 
@@ -262,7 +262,7 @@ private:
 
     void afisareOptiuni();
     void run();
-    void adaugareCarte();
+    Carte adaugareCarte();  ///clasa builder
     void adaugareCD();
     void adaugareClient();
     void adaugareProdusClient();
@@ -286,7 +286,9 @@ void Meniu::afisareOptiuni() {
     cout << "Optiunea ta:\n";
 }
 
-void Meniu::adaugareCarte() {
+Carte Meniu::adaugareCarte() {
+    CarteBuilder b;
+
     string titlu, autor, format;
     double pret;
     int stoc, nr_pagini;
@@ -305,9 +307,17 @@ void Meniu::adaugareCarte() {
     cout << "Format: ";
     cin >> format;
 
+    b.titlu(titlu)
+    .autor(autor)
+    .pret(pret)
+    .stoc(stoc)
+    .nr_pagini(nr_pagini)
+    .format(format);
+
+    Carte carte = b.build();
     ///UPCASTING AUTOMAT => carte devine produs
-    Carte* carte =  new Carte(titlu, autor, pret, stoc, nr_pagini, format);
-    produse.push_back(carte);   ///pentru a putea avea produsele si in vectorul produse
+   // Carte* carte =  new Carte(titlu, autor, pret, stoc, nr_pagini, format);
+    produse.push_back(&carte);   ///pentru a putea avea produsele si in vectorul produse
     cout << "Cartea a fost inregistrata cu succes!\n";
 }
 
@@ -471,8 +481,9 @@ void Meniu::adaugareProdusClient() {
 
 class wrongInput:public exception {
 public:
-    const char* what() {return "Alegere gresita!";}
+    const char* what() const noexcept override {return "Alegere gresita!";}
 };
+///Daca o fct. e marcata cu noexcept => ea nu va arunca nicio exceptie!
 
 void Meniu::run() {
         while(true) {
@@ -496,7 +507,7 @@ void Meniu::run() {
             }
             catch(exception& e) {
                 cout << "Eroare: " << e.what() << '\n';
-                run();
+               // run();
             }
         }
 };
