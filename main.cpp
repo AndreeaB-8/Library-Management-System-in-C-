@@ -262,7 +262,7 @@ private:
 
     void afisareOptiuni();
     void run();
-    Carte adaugareCarte();  ///clasa builder
+    void adaugareCarte();  ///clasa builder
     void adaugareCD();
     void adaugareClient();
     void adaugareProdusClient();
@@ -286,7 +286,7 @@ void Meniu::afisareOptiuni() {
     cout << "Optiunea ta:\n";
 }
 
-Carte Meniu::adaugareCarte() {
+void Meniu::adaugareCarte() {
     CarteBuilder b;
 
     string titlu, autor, format;
