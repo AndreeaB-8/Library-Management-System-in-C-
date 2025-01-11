@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include <string>
 #include <vector>
 #include <memory>
 #include <exception>
@@ -44,7 +45,7 @@ public:
     virtual ~Produs() {}
 
     const string getTitlu() const {return titlu;}
-    const int getStoc() const {return stoc;}
+    int getStoc() const {return stoc;}
     void scadeStoc() {
         stoc--;
     }
@@ -145,7 +146,7 @@ private:
 public:
     CD(string titlu, string autor, string album, double pret, int stoc, int nr_melodii, string gen)
         :Produs(titlu, autor, pret, stoc), gen(gen), album(album), nr_melodii(nr_melodii) {}
-    CD(const CD &c):Produs(c), nr_melodii(c.nr_melodii), gen(c.gen), album(c.album) {}
+    CD(const CD &c):Produs(c), gen(c.gen), album(c.album),nr_melodii(c.nr_melodii) {}
 
     CD& operator=(const CD& c) {
         if(this != &c){
