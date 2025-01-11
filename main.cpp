@@ -415,7 +415,7 @@ void Meniu::afisareCarti() {
     bool ok = 0;
     cout << "Carti inregistrate: \n";
     for(Produs* produs: produse) {
-        if(Carte* carte = dynamic_cast<Carte*>(produs)) {
+        if(const Carte* carte = dynamic_cast<const Carte*>(produs)) {
             cout << *carte;
             ok = 1;
         }
@@ -428,7 +428,7 @@ void Meniu::afisareCarti() {
 void Meniu::afisareCDuri() {
     bool ok = 0;
     cout << "CD-uri inregistrate: \n";
-    for(Produs* produs: produse) {
+    for(const Produs* produs: produse) {    ///!!!const
         if(const CD* cd = dynamic_cast<const CD*>(produs)) {    ///!!!
             cout << *cd;
             ok = 1;
