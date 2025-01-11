@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <exception>
+#include <limits>
 
 using namespace std;
 
@@ -524,6 +525,8 @@ void Meniu::run() {
             catch(exception& e) {
                 cout << "Eroare: " << e.what() << '\n';
                // run();
+                cin.clear();    ///resetare erori de intrare
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
             }
         }
 };
