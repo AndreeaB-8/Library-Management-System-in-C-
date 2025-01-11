@@ -1,7 +1,1 @@
-1
-Razboi si pace
-Lev Tolstoi
-33
-3
-230
-epub
+1;Razboi si pace;Lev Tolstoi;33;3;230;epub
