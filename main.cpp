@@ -356,6 +356,7 @@ void Meniu::afisareOptiuni() {
     cout << "8. Adaugare produs client\n";
     cout << "9. Cautare produs dupa titlu\n";
     cout << "10. Afisare inventar client \n";
+    cout << "0. Iesire \n";
     cout << "Optiunea ta:\n";
 }
 
@@ -583,6 +584,9 @@ void Meniu::run() {
                     case 8: adaugareProdusClient(); break;
                     case 9: cautareProdusTitlu(); break;
                     case 10: afisareInventarClient(); break;
+                    case 0:
+                        cout << "Iesire \n";
+                        return;
                     default: throw wrongInput();
                 }
             }
