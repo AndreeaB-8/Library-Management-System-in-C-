@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 #include <exception>
-#include <limits>
+//#include <limits>
 
 using namespace std;
 
@@ -39,13 +39,14 @@ public:
 
         cout << "Pret: ";
         in >> p.pret;
+
         cout << "Stoc: ";
         in >> p.stoc;
         return in;
     }
     virtual ~Produs() {}
 
-    const string &getTitlu() const {return titlu;}  ///!!!
+    const string &getTitlu() const {return titlu;}
     int getStoc() const {return stoc;}
     void scadeStoc() {
         stoc--;
@@ -55,13 +56,14 @@ public:
 
 class Carte: public Produs {    ///de tip BUILDER
 private:
-    int nr_pagini = 0;  ///le-am initializat asa ca sa nu mi mai dea eroare
-    string format = ""; ///dar si pt a lasa constr de la builder asa
+    int nr_pagini = 0;
+    string format = "";
+
 friend class CarteBuilder;
 public:
     Carte() = default;  ///pt builder
-    Carte(const string &titlu, const string &autor, double pret, int stoc, int nr_pagini, const string &format) ///referinta constanta pt parametrii de tip string
-    : Produs(titlu, autor, pret, stoc), nr_pagini(nr_pagini) , format(format) {}
+    Carte(const string &titlu, const string &autor, double pret, int stoc, int nr_pagini, const string &format)
+        : Produs(titlu, autor, pret, stoc), nr_pagini(nr_pagini) , format(format) {}
     Carte(const Carte &c):Produs(c), nr_pagini(c.nr_pagini), format(c.format) {}
 
     Carte& operator=(const Carte& c) {
@@ -86,7 +88,6 @@ public:
     }
 
     friend istream& operator>>(istream &in, Carte& c) {
-        //in >> (Produs&) c;  ///citirea atributelor comune din Produs
         in >> dynamic_cast<Produs&>(c);
         cout << "Nr Pagini: ";
         in >> c.nr_pagini;
@@ -96,7 +97,7 @@ public:
     }
 
     double PretFinal()const override {
-        return pret + (pret * 0.04);   ///Am presupus ca TVA-ul pt carti este 4%
+        return pret + (pret * 0.04);   ///TVA-ul pt carti este 4%
     }
     virtual ~Carte() override{}
 };
@@ -135,7 +136,7 @@ class CarteBuilder {
         carte.format = f;
         return *this;
     }
-    Carte &build() {    ///!!!
+    Carte &build() {
         return carte;
     }
 };
@@ -146,7 +147,7 @@ private:
     int nr_melodii;
 
 public:
-    CD(const string &titlu, const string &autor, const string &album, double pret, int stoc, int nr_melodii, const string &gen) ///!!!
+    CD(const string &titlu, const string &autor, const string &album, double pret, int stoc, int nr_melodii, const string &gen)
         :Produs(titlu, autor, pret, stoc), gen(gen), album(album), nr_melodii(nr_melodii) {}
     CD(const CD &c):Produs(c), gen(c.gen), album(c.album),nr_melodii(c.nr_melodii) {}
 
@@ -160,7 +161,6 @@ public:
         return *this;
     }
 
-    ///METODA 1
     void afisare(ostream &out) const override{
         Produs::afisare(out);
         out << "Numar melodii : " << nr_melodii << '\n';
@@ -174,7 +174,6 @@ public:
     }
 
     friend istream& operator>>(istream &in, CD& c) {
-        //in >> (Produs&) c;
         in >> dynamic_cast<Produs&>(c);
         cout << "Numar melodii : ";
         in >> c.nr_melodii;
@@ -209,13 +208,6 @@ public:
             cout << *produs << '\n';
         }
     }
-    /*double Suma() const {
-        double suma = 0;
-        for(const auto& produs: produse) {
-            suma += produs -> PretFinal();
-        }
-        return suma;
-    }*/
 
     ~Inventar() {
         for(const T* produs: produse) {
@@ -235,12 +227,12 @@ private:
     double suma_produse;
     Inventar <Produs> inventar;
 
-public: ///!!!const string &
+public:
     Client(const string &nume, const string &prenume, const string &nr_telefon, const string &email) : nume(nume), prenume(prenume), nr_telefon(nr_telefon), email(email), suma_produse(0) {
         index = contor++;
     }
 
-    ///operator supraincarcat ca functie membra ///!!!am pus const
+    ///operator supraincarcat ca functie membra
     Client &operator+=(const Produs* produse) {   ///suma produselor achizitionate de un client
         inventar.adaugareProdus(produse);
         suma_produse += produse -> PretFinal();
@@ -274,11 +266,7 @@ public: ///!!!const string &
     }
     virtual ~Client() {}
 
-    //int getIndex() const{return index;}
     int getSumaClient() const{return suma_produse;}
-    //const string &getNume() const{return nume;}
-    //const string &getPrenume() const{return prenume;}
-    //const string &getTelefon() const {return nr_telefon;}
     void afisareInventarClient() const{
        inventar.afisare();
     }
@@ -323,7 +311,7 @@ private:
 
 void Meniu::afisareInventarClient() {
     if(clienti.empty()) {
-        cout << "Nu sunt clienti inregistrati! \n";
+        cout << "Nu exista niciun client inregistrat! \n";
         return;
     }
     cout << "Alegeti clientul: \n";
@@ -388,17 +376,16 @@ void Meniu::adaugareCarte() {
     .nr_pagini(nr_pagini)
     .format(format);
 
-    //Carte carte = b.build();
     ///UPCASTING AUTOMAT => carte devine produs
     Carte* carte =  new Carte(b.build());
-    produse.push_back(carte);   ///pentru a putea avea produsele si in vectorul produse
+    produse.push_back(carte);   ///pentru a avea cartile in vectorul produse
     cout << "Cartea a fost inregistrata cu succes!\n";
 }
 
 void Meniu::sortare_carti_pret() {
-    vector <const Carte*> carti;    ///!!!
+    vector <const Carte*> carti;
     for(const Produs* produs : produse) {
-        if(const Carte* c = dynamic_cast <const Carte*> (produs)) { ///!!!
+        if(const Carte* c = dynamic_cast <const Carte*> (produs)) {
             carti.push_back(c);
         }
     }
@@ -418,7 +405,7 @@ void Meniu::cautareProdusTitlu() {
     for(Produs* produs : produse) {
         if(produs->getTitlu() == titlu) {
             gasit = true;
-            if(dynamic_cast<Carte *>(produs)) { ///pt ca primeam eroare la G actions
+            if(dynamic_cast<Carte *>(produs)) {
                 cout << "Carte gasita!\n";
             }
             else if(dynamic_cast<CD *>(produs)) {
@@ -471,9 +458,7 @@ void Meniu::adaugareClient() {
     cin.ignore();
     getline(cin, email);
 
-    Client *client = new Client(nume, prenume, nr_telefon, email);    ///memory leak
-    //unique_ptr<Client> client = make_unique<Client>(nume, prenume, nr_telefon, email);
-    //clienti.push_back(client.get());
+    Client *client = new Client(nume, prenume, nr_telefon, email);
     clienti.push_back(client);
     cout << "Clientul a fost inregistrat cu succes!\n";
 }
@@ -495,8 +480,8 @@ void Meniu::afisareCarti() {
 void Meniu::afisareCDuri() {
     bool ok = false;
     cout << "CD-uri inregistrate: \n";
-    for(const Produs* produs: produse) {    ///!!const
-        if(const CD* cd = dynamic_cast<const CD*>(produs)) {    ///!!!
+    for(const Produs* produs: produse) {
+        if(const CD* cd = dynamic_cast<const CD*>(produs)) {
             cout << *cd;
             ok = true;
         }
@@ -513,7 +498,7 @@ void Meniu::afisareClienti() {
     }
     cout << "Clienti inregistrati:\n";
     for(auto i = clienti.begin(); i != clienti.end(); i++) {
-        const auto* client = *i;    ///*, nu &!!!
+        const auto* client = *i;
         client -> afisare();
         cout << '\n';
     }
@@ -526,7 +511,7 @@ void Meniu::adaugareProdusClient() {
     }
 
     cout <<"Selecteaza indexul clientului:\n";
-    for(size_t i = 0; i < clienti.size(); i++) {    ///eroare la github actions
+    for(size_t i = 0; i < clienti.size(); i++) {
         cout << i + 1 <<". " << *clienti[i] << '\n';
     }
 
@@ -544,7 +529,7 @@ void Meniu::adaugareProdusClient() {
         cout << i + 1 <<". " << *produse[i] << '\n';
     }
 
-    size_t index_produs;    ///poate fi citita si o valoare negativa
+    size_t index_produs;
     cin >> index_produs;
     if(index_produs > 0 && index_produs <= produse.size()) {
         Produs* produs = produse[index_produs - 1];
@@ -592,9 +577,8 @@ void Meniu::run() {
             }
             catch(exception& e) {
                 cout << "Eroare: " << e.what() << '\n';
-               // run();
-                cin.clear();    ///resetare erori de intrare
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                //cin.clear();    ///resetare erori de intrare
+                //cin.ignore(numeric_limits<streamsize>::max(), '\n');
             }
         }
 };
