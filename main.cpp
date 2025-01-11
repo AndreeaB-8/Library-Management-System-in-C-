@@ -479,7 +479,7 @@ void Meniu::adaugareProdusClient() {
         cout << i + 1 <<". " << *produse[i] << '\n';
     }
 
-    int index_produs;
+    size_t index_produs;    ///poate fi citita si o valoare negativa
     cin >> index_produs;
     if(index_produs > 0 && index_produs <= produse.size()) {
         Produs* produs = produse[index_produs - 1];
