@@ -265,7 +265,7 @@ public:
     }
     virtual ~Client() {}
 
-    int getSumaClient() const{return suma_produse;}
+    //int getSumaClient() const{return suma_produse;}
     void afisareInventarClient() const{
        inventar.afisare();
     }
