@@ -1,6 +1,6 @@
 function(detect_libcpp)
     set(OLD_CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -DLIBCXXABI_USE_LLVM_UNWINDER=OFF")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
     set(TEST_STDLIB_SRC [=[
     #include <iostream>
     int main() {}
