@@ -577,8 +577,6 @@ void Meniu::run() {
             }
             catch(exception& e) {
                 cout << "Eroare: " << e.what() << '\n';
-                //cin.clear();    ///resetare erori de intrare
-                //cin.ignore(numeric_limits<streamsize>::max(), '\n');
             }
         }
 };
