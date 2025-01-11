@@ -1,0 +1,37 @@
+1
+Ion
+Liviu Rebreanu
+22
+12
+300
+epub
+
+2
+Abbey Road
+The Beatles
+28
+4
+17
+rock
+Abbey Road
+
+2
+The Dark Side of The Moon
+Pink Floyd
+100
+9
+10
+rock
+The Dark Side of The Moon
+
+3
+Ana
+Tanase
+0755645333
+tanaseana@yahoo.com
+
+3
+Irina
+Mihai
+0766453554
+irina99@gmail.com

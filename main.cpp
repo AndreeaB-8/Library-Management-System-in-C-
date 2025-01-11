@@ -192,6 +192,42 @@ public:
 };
 
 ///
+template <typename T>
+class Inventar {
+    vector <T*> produse;
+public:
+    void adaugareProdus(const T* produs) {
+        produse.push_back(const_cast<T*>(produs));  ///!!!CONST CAST
+    }
+    void afisare() const {
+        if(produse.empty()) {
+            cout << "Clientul nu a facut nicio achizitie!\n";
+            return;
+        }
+        cout << "Produse achizitionate: \n";
+        for(const auto& produs: produse) {
+            cout << *produs << '\n';
+        }
+    }
+    double Suma() const {
+        double suma = 0;
+        for(const auto& produs: produse) {
+            suma += produs -> PretFinal();
+        }
+        return suma;
+    }
+
+    const vector <T*>& getProdus() const {
+        return produse;
+    }
+
+    ~Inventar() {
+        for(T* produs: produse) {
+            delete produs;
+        }
+    }
+};
+
 class Client {
 private:
     int index;
@@ -201,6 +237,7 @@ private:
     string nr_telefon;
     string email;
     double suma_produse;
+    Inventar <Produs> inventar;
 
 public: ///!!!const string &
     Client(const string &nume, const string &prenume, const string &nr_telefon, const string &email) : nume(nume), prenume(prenume), nr_telefon(nr_telefon), email(email), suma_produse(0) {
@@ -209,6 +246,7 @@ public: ///!!!const string &
 
     ///operator supraincarcat ca functie membra ///!!!am pus const
     Client &operator+=(const Produs* produse) {   ///suma produselor achizitionate de un client
+        inventar.adaugareProdus(produse);
         suma_produse += produse -> PretFinal();
         return *this;
     }
@@ -245,6 +283,7 @@ public: ///!!!const string &
     //const string &getNume() const{return nume;}
     //const string &getPrenume() const{return prenume;}
     //const string &getTelefon() const {return nr_telefon;}
+    const vector <Produs*>& getInventarClient() const {return inventar.getProdus();}
 };
 int Client::contor = 1;
 
@@ -274,6 +313,7 @@ private:
     void afisareClienti();
     void sortare_carti_pret();
     void cautareProdusTitlu();
+    void afisareInventarClient();
 
     ~Meniu() {
         for(Produs* produs: produse)
@@ -293,6 +333,7 @@ void Meniu::afisareOptiuni() {
     cout << "7. Sortare carti dupa pret\n";
     cout << "8. Adaugare produs client\n";
     cout << "9. Cautare produs dupa titlu\n";
+    cout << "10. Afisare inventar client\n";
     cout << "Optiunea ta:\n";
 }
 
@@ -487,6 +528,7 @@ void Meniu::adaugareProdusClient() {
         if(produs -> getStoc() > 0) {
             produs -> scadeStoc();
             *c += produs;    ///adaugam produsul clientului
+
             cout << "Clientul a cumparat produsul! Achizitie reusita!\n";
         }
         cout << "Suma cheltuita de clientul " << index << " este: " << c -> getSumaClient() << '\n';
@@ -495,6 +537,32 @@ void Meniu::adaugareProdusClient() {
         cout << "Indexul selectat este incorect!\n";
     }
 }
+
+void Meniu::afisareInventarClient() {
+    if(clienti.empty()) {
+        cout << "Nu exista clienti inregistrati!\n";
+    }
+    cout << "Index client: \n";
+    for(size_t i = 0; i < clienti.size(); i++) {
+        cout << i + 1 <<". " << *clienti[i] << '\n';
+    }
+    int index;
+    cin >> index;
+    Client* c = clienti[index - 1];
+
+    cout << "Inventar: \n";
+    const vector <Produs*>& inventar = c->getInventarClient();
+
+    if(inventar.empty()) {
+        cout << "Clientul nu a achizitionat niciun produs! \n";
+    }
+    else {
+        for(const Produs *p : inventar) {
+            cout << *p;
+        }
+    }
+}
+
 
 class wrongInput:public exception {
 public:
@@ -519,6 +587,7 @@ void Meniu::run() {
                     case 7: sortare_carti_pret(); break;
                     case 8: adaugareProdusClient(); break;
                     case 9: cautareProdusTitlu(); break;
+                    case 10: afisareInventarClient(); break;
                     default: throw wrongInput();
                 }
             }
