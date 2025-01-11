@@ -194,10 +194,10 @@ public:
 ///
 template <typename T>
 class Inventar {
-    vector <T*> produse;
+    vector <const T*> produse;
 public:
     void adaugareProdus(const T* produs) {
-        produse.push_back(const_cast<T*>(produs));  ///!!!CONST CAST
+        produse.push_back(produs);
     }
     void afisare() const {
         if(produse.empty()) {
@@ -205,24 +205,20 @@ public:
             return;
         }
         cout << "Produse achizitionate: \n";
-        for(const Produs* produs: produse) {
+        for(const auto& produs: produse) {
             cout << *produs << '\n';
         }
     }
     double Suma() const {
         double suma = 0;
-        for(const Produs* produs: produse) {
+        for(const auto& produs: produse) {
             suma += produs -> PretFinal();
         }
         return suma;
     }
 
-    const vector <T*>& getProdus() const {
-        return produse;
-    }
-
     ~Inventar() {
-        for(T* produs: produse) {
+        for(const T* produs: produse) {
             delete produs;
         }
     }
@@ -283,7 +279,9 @@ public: ///!!!const string &
     //const string &getNume() const{return nume;}
     //const string &getPrenume() const{return prenume;}
     //const string &getTelefon() const {return nr_telefon;}
-    const vector <Produs*>& getInventarClient() const {return inventar.getProdus();}
+    void afisareInventarClient() const{
+       inventar.afisare();
+    }
 };
 int Client::contor = 1;
 
@@ -323,6 +321,30 @@ private:
     }
 };
 
+void Meniu::afisareInventarClient() {
+    if(clienti.empty()) {
+        cout << "Nu sunt clienti inregistrati! \n";
+        return;
+    }
+    cout << "Alegeti clientul: \n";
+    for(size_t i = 0; i < clienti.size(); ++i) {
+        cout << i + 1 << ". " << *clienti[i] << '\n';
+    }
+
+    int index;
+    cout << "Introduceti indexul clientului: \n";
+    cin >> index;
+
+    if(index < 1 || index > clienti.size()) {
+        cout << "Index gresit! \n";
+        return;
+    }
+
+    Client *client = clienti[index - 1];
+    client -> afisareInventarClient();
+}
+
+
 void Meniu::afisareOptiuni() {
     cout << "1. Adauga carte\n";
     cout << "2. Adauga CD\n";
@@ -333,7 +355,7 @@ void Meniu::afisareOptiuni() {
     cout << "7. Sortare carti dupa pret\n";
     cout << "8. Adaugare produs client\n";
     cout << "9. Cautare produs dupa titlu\n";
-    cout << "10. Afisare inventar client\n";
+    cout << "10. Afisare inventar client \n";
     cout << "Optiunea ta:\n";
 }
 
@@ -509,62 +531,33 @@ void Meniu::adaugareProdusClient() {
 
     int index;
     cin >> index;
-    if(index > 0 && index <= clienti.size()) {
-        Client* c = clienti[index - 1];
+    Client* c = clienti[index - 1];
 
-        if(produse.empty()) {
-            cout << "Nu exista produse in stoc! \n";
-            return;
-        }
-
-        cout << "Selecteaza indexul produsului dorit: \n";
-        for(size_t i = 0; i < produse.size(); i++) {
-            cout << i + 1 <<". " << *produse[i] << '\n';
-        }
-
-        size_t index_produs;    ///poate fi citita si o valoare negativa
-        cin >> index_produs;
-        if(index_produs > 0 && index_produs <= produse.size()) {
-            Produs* produs = produse[index_produs - 1];
-            if(produs -> getStoc() > 0) {
-                produs -> scadeStoc();
-                *c += produs;    ///adaugam produsul clientului
-
-                cout << "Clientul a cumparat produsul! Achizitie reusita!\n";
-            }
-            cout << "Suma cheltuita de clientul " << index << " este: " << c -> getSumaClient() << '\n';
-        }
-        else {
-            cout << "Indexul selectat este incorect!\n";
-        }
+    if(produse.empty()) {
+        cout << "Nu exista produse in stoc! \n";
+        return;
     }
-}
 
-void Meniu::afisareInventarClient() {
-    if(clienti.empty()) {
-        cout << "Nu exista clienti inregistrati!\n";
+    cout << "Selecteaza indexul produsului dorit: \n";
+    for(size_t i = 0; i < produse.size(); i++) {
+        cout << i + 1 <<". " << *produse[i] << '\n';
     }
-    cout << "Index client: \n";
-    for(size_t i = 0; i < clienti.size(); i++) {
-        cout << i + 1 <<". " << *clienti[i] << '\n';
-    }
-    int index;
-    cin >> index;
-    const Client* c = clienti[index - 1];
 
-    cout << "Inventar: \n";
-    const vector <Produs*>& inventar = c->getInventarClient();
-
-    if(inventar.empty()) {
-        cout << "Clientul nu a achizitionat niciun produs! \n";
+    size_t index_produs;    ///poate fi citita si o valoare negativa
+    cin >> index_produs;
+    if(index_produs > 0 && index_produs <= produse.size()) {
+        Produs* produs = produse[index_produs - 1];
+        if(produs -> getStoc() > 0) {
+            produs -> scadeStoc();
+            *c += produs;    ///adaugam produsul clientului
+            cout << "Clientul a cumparat produsul! Achizitie reusita!\n";
+        }
+        cout << "Suma cheltuita de clientul " << index << " este: " << c -> getSumaClient() << '\n';
     }
     else {
-        for(const Produs *p : inventar) {
-            cout << *p;
-        }
+        cout << "Indexul selectat este incorect!\n";
     }
 }
-
 
 class wrongInput:public exception {
 public:
