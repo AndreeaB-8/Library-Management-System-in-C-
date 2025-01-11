@@ -94,7 +94,7 @@ public:
     }
 
     double PretFinal()const override {
-        return pret + (pret * (4/100));   ///Am presupus ca TVA-ul pt carti este 4%
+        return pret + (pret * 0.04);   ///Am presupus ca TVA-ul pt carti este 4%
     }
     virtual ~Carte() override{}
 };
@@ -129,7 +129,7 @@ class CarteBuilder {
         carte.nr_pagini = np;
         return *this;
     }
-    CarteBuilder& format(string f) {
+    CarteBuilder& format(const string &f) {
         carte.format = f;
         return *this;
     }
@@ -183,7 +183,7 @@ public:
         return in;
     }
     double PretFinal() const override {
-        return pret + (pret * (7/100));  ///TVA-ul pt CD-uri = 7%
+        return pret + (pret * 0.07);  ///TVA-ul pt CD-uri = 7%
     }
     virtual ~CD() override{}
 };
@@ -204,8 +204,8 @@ public:
         index = contor++;
     }
 
-    ///operator supraincarcat ca functie membra
-    Client &operator+=(Produs* produse) {   ///suma produselor achizitionate de un client
+    ///operator supraincarcat ca functie membra ///!!!am pus const
+    Client &operator+=(const Produs* produse) {   ///suma produselor achizitionate de un client
         suma_produse += produse -> PretFinal();
         return *this;
     }
@@ -271,6 +271,13 @@ private:
     void afisareClienti();
     void sortare_carti_pret();
     void cautareProdusTitlu();
+
+    ~Meniu() {
+        for(Produs* produs: produse)
+            delete produs;
+        for(Client* client: clienti)
+            delete client;
+    }
 };
 
 void Meniu::afisareOptiuni() {
@@ -314,10 +321,10 @@ void Meniu::adaugareCarte() {
     .nr_pagini(nr_pagini)
     .format(format);
 
-    Carte carte = b.build();
+    //Carte carte = b.build();
     ///UPCASTING AUTOMAT => carte devine produs
-   // Carte* carte =  new Carte(titlu, autor, pret, stoc, nr_pagini, format);
-    produse.push_back(&carte);   ///pentru a putea avea produsele si in vectorul produse
+    Carte* carte =  new Carte(b.build());
+    produse.push_back(carte);   ///pentru a putea avea produsele si in vectorul produse
     cout << "Cartea a fost inregistrata cu succes!\n";
 }
 
@@ -328,7 +335,7 @@ void Meniu::sortare_carti_pret() {
             carti.push_back(c);
         }
     }
-    sort(carti.begin(), carti.end(), [](Carte* a, Carte* b) {
+    sort(carti.begin(), carti.end(), [](const Carte* a, const Carte* b) {
         return a->PretFinal() < b->PretFinal();
     });
     cout << "Cartile au fost sortate dupa pret!\n";
