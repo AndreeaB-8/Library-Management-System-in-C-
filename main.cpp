@@ -209,13 +209,13 @@ public:
             cout << *produs << '\n';
         }
     }
-    double Suma() const {
+    /*double Suma() const {
         double suma = 0;
         for(const auto& produs: produse) {
             suma += produs -> PretFinal();
         }
         return suma;
-    }
+    }*/
 
     ~Inventar() {
         for(const T* produs: produse) {
@@ -331,7 +331,7 @@ void Meniu::afisareInventarClient() {
         cout << i + 1 << ". " << *clienti[i] << '\n';
     }
 
-    int index;
+    size_t index;
     cout << "Introduceti indexul clientului: \n";
     cin >> index;
 
@@ -340,7 +340,7 @@ void Meniu::afisareInventarClient() {
         return;
     }
 
-    Client *client = clienti[index - 1];
+    const Client *client = clienti[index - 1];
     client -> afisareInventarClient();
 }
 
