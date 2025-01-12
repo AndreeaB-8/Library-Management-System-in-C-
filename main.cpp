@@ -24,23 +24,27 @@ public:
         out << "Stoc: " << stoc << '\n';
     }
 
+    virtual void citire(istream &in, Produs *p) {
+        cout << "Titlu: ";
+        in.ignore();
+        getline(in, p->titlu);
+
+        cout << "Autor: ";
+        getline(in, p->autor);
+
+        cout << "Pret: ";
+        in >> p->pret;
+
+        cout << "Stoc: ";
+        in >> p->stoc;
+    }
+
     friend ostream& operator<<(ostream &out, const Produs &p) {
         p.afisare(out);
         return out;
     }
     friend istream& operator>>(istream &in, Produs &p) {
-        cout << "Titlu: ";
-        in.ignore();
-        getline(in, p.titlu);
-
-        cout << "Autor: ";
-        getline(in, p.autor);
-
-        cout << "Pret: ";
-        in >> p.pret;
-
-        cout << "Stoc: ";
-        in >> p.stoc;
+        p.citire(in, &p);
         return in;
     }
     virtual ~Produs() {}
@@ -81,18 +85,12 @@ public:
         out << "\n";
     }
 
-    friend ostream& operator<<(ostream &out, const Carte& c) {
-        c.afisare(out);
-        return out;
-    }
-
-    friend istream& operator>>(istream &in, Carte& c) {
-        in >> dynamic_cast<Produs&>(c);
+    void citire(istream &in, Carte *c){
+        Produs::citire(in, c);
         cout << "Nr Pagini: ";
-        in >> c.nr_pagini;
+        in >> nr_pagini;
         cout << "Format: ";
-        in >> c.format;
-        return in;
+        in >> format;
     }
 
     double PretFinal()const override {
@@ -167,22 +165,18 @@ public:
         out << "Album : " << album << '\n';
         out << "\n";
     }
-    friend ostream& operator<<(ostream &out, const CD& c) {
-        c.afisare(out);
-        return out;
-    }
 
-    friend istream& operator>>(istream &in, CD& c) {
-        in >> dynamic_cast<Produs&>(c);
+    void citire(istream &in, CD *c) {
+        Produs::citire(in, c);
         cout << "Numar melodii : ";
-        in >> c.nr_melodii;
+        in >> nr_melodii;
         cout << "Gen : ";
-        in >> c.gen;
+        in >> gen;
         cout << "Album : ";
         in.ignore();
-        getline(in, c.album);
-        return in;
+        getline(in, album);
     }
+
     double PretFinal() const override {
         return pret + (pret * 0.07);  ///TVA-ul pt CD-uri = 7%
     }
@@ -247,22 +241,27 @@ public:
         cout << "\n";
     }
 
+    void citire() {
+        cout << "Nume: ";
+        cin >> nume;
+        cout << "Prenume: ";
+        cin >> prenume;
+        cout << "Numar de telefon: ";
+        cin >> nr_telefon;
+        cout << "Email: ";
+        cin >> email;
+    }
+
     friend ostream& operator<<(ostream &out, const Client& c) {
         c.afisare();
         return out;
     }
 
     friend istream& operator>>(istream &in, Client& c) {
-        cout << "Nume: ";
-        in >> c.nume;
-        cout << "Prenume: ";
-        in >> c.prenume;
-        cout << "Numar de telefon: ";
-        in >> c.nr_telefon;
-        cout << "Email: ";
-        in >> c.email;
+        c.citire();
         return in;
     }
+
     virtual ~Client() {}
 
     void afisareInventarClient() const{
@@ -374,9 +373,8 @@ void Meniu::adaugareCarte() {
     .nr_pagini(nr_pagini)
     .format(format);
 
-    ///UPCASTING AUTOMAT => carte devine produs
-    Carte* carte =  new Carte(b.build());
-    produse.push_back(carte);   ///pentru a avea cartile in vectorul produse
+    Carte* c = new Carte(b.build());
+    produse.push_back(c);   ///pentru a avea cartile in vectorul produse
     cout << "Cartea a fost inregistrata cu succes!\n";
 }
 
@@ -421,7 +419,7 @@ void Meniu::adaugareCD() {
     double pret;
     int stoc, nr_melodii;
 
-    cout << "Titlu: ";
+    /*cout << "Titlu: ";
     cin.ignore();
     getline(cin, titlu);
     cout << "Autor: ";
@@ -436,9 +434,11 @@ void Meniu::adaugareCD() {
     cin >> gen;
     cout << "Album: ";
     cin.ignore();
-    getline(cin, album);
+    getline(cin, album);*/
+
 
     CD* cd = new CD(titlu, autor, album, pret, stoc, nr_melodii, gen);
+    cd->citire(cin, cd);
     produse.push_back(cd);
     cout << "CD-ul a fost inregistrat cu succes!\n";
 }
@@ -465,7 +465,7 @@ void Meniu::afisareCarti() {
     bool ok = false;
     cout << "Carti inregistrate: \n";
     for(const Produs* produs: produse) {
-        if(const Carte* carte = dynamic_cast<const Carte*>(produs)) {
+        if(const Carte* carte = dynamic_cast<const Carte *> (produs)) {
             cout << *carte;
             ok = true;
         }
