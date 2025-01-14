@@ -85,8 +85,8 @@ public:
         out << "\n";
     }
 
-    void citire(istream &in, Carte *c){
-        Produs::citire(in, c);
+    void citire(istream &in, Produs *p) override{
+        Produs::citire(in, p);
         cout << "Nr Pagini: ";
         in >> nr_pagini;
         cout << "Format: ";
@@ -144,6 +144,8 @@ private:
     int nr_melodii;
 
 public:
+    CD():Produs(), gen(""), album(""), nr_melodii(0) {
+    }
     CD(const string &titlu, const string &autor, const string &album, double pret, int stoc, int nr_melodii, const string &gen)
         :Produs(titlu, autor, pret, stoc), gen(gen), album(album), nr_melodii(nr_melodii) {}
     CD(const CD &c):Produs(c), gen(c.gen), album(c.album),nr_melodii(c.nr_melodii) {}
@@ -166,8 +168,8 @@ public:
         out << "\n";
     }
 
-    void citire(istream &in, CD *c) {
-        Produs::citire(in, c);
+    void citire(istream &in, Produs *p) override{
+        Produs::citire(in, p);
         cout << "Numar melodii : ";
         in >> nr_melodii;
         cout << "Gen : ";
@@ -415,9 +417,9 @@ void Meniu::cautareProdusTitlu() {
 }
 
 void Meniu::adaugareCD() {
-    string titlu, autor, gen, album;
+    /*string titlu, autor, gen, album;
     double pret;
-    int stoc, nr_melodii;
+    int stoc, nr_melodii;*/
 
     /*cout << "Titlu: ";
     cin.ignore();
@@ -437,7 +439,7 @@ void Meniu::adaugareCD() {
     getline(cin, album);*/
 
 
-    CD* cd = new CD(titlu, autor, album, pret, stoc, nr_melodii, gen);
+    CD* cd = new CD();
     cd->citire(cin, cd);
     produse.push_back(cd);
     cout << "CD-ul a fost inregistrat cu succes!\n";
