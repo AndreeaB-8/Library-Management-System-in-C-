@@ -1,31 +1,31 @@
-# Proiect Librarie
- Acest proiect C++ reprezinta gestionarea unui meniu de produse: carti si cd-uri si a interactiunii cu clientii, inclusiv cumpararea de produse, gestionarea stocurilor si calcularea sumei cheltuite de fiecare client.
+# Library Project
+This C++ project manages a product menu consisting of books and CDs, as well as customer interactions, including purchasing products, managing stock, and calculating the total amount spent by each customer.
 
-## Caracteristici principale
-- Gestionarea produselor: adaugarea de produse: carti si cd-uri, fiecare cu un pret, stoc si un TVA specific.
-- Gestionarea clientilor: adaugarea clientilor, cumpararea produselor si calculul sumei totale cheltuite.
-- Clasa template Inventar: gestioneaza cartile cumparate de catre fiecare client.
-- Meniu: permite utilizatorului sa gestioneze interactiunile cu clientii prin intermediul consolei.
+## Main Features
+- **Product management**: Add products such as books and CDs, each with a specific price, stock quantity, and VAT rate.
+- **Customer management**: Add customers, process product purchases, and calculate the total amount spent by each customer.
+- **Inventory template class**: A generic class that manages the books purchased by each customer.
+- **Menu system**: Allows the user to manage customer interactions via the console interface.
 
-## Structura proiectului
-### Clase principale:
-1. Produs
-   -Clasa de baza pentru produse = CLASA ABSTRACTA
-2. Carte
-   -Derivata din Produs
-3. CD
-   -Derivata din Produs
-4. Client
-   -clasa de baza pentru clienti
-5. Meniu
-   -centralizeaza interactiunile utilizatorului.
-   -permite adaugarea, vizualizarea produselor si efectuarea de achizitii.
+## Project Structure
+### Main Classes:
+1. **Product**
+   - Abstract base class for products.
+2. **Book**
+   - Derived from `Product`.
+3. **CD**
+   - Derived from `Product`.
+4. **Customer**
+   - Base class for customers.
+5. **Menu**
+   - Centralizes user interactions.
+   - Allows adding and viewing products, and making purchases.
 
-### Utilizare
-- Adaugare produse. (carti si cd-uri)
-- Adaugare clienti.
-- Adaugare produse pentru clienti. (achizitii)
-- Vizualizare sume cheltuite de fiecare client.
-- Verificare stoc ramas pentru fiecare client.
-- Cautare produs in functie de titlu.
-- Sortarea cartilor librariei in functie de pret.
+### Functionality
+- Add products (books and CDs)
+- Add customers
+- Assign products to customers (purchases)
+- View the total amount spent by each customer
+- Check remaining stock for each product
+- Search for products by title
+- Sort the library’s books by price
